@@ -1,0 +1,53 @@
+
+./Setup.hs,15
+main main1,2
+
+./src/Main.hs,1473
+module Main Main1,2
+data Stone Stone9,10
+data Stone = Black Black9,10
+data Stone = Black | White White9,10
+type LocationValue LocationValue11,12
+data GameState GameState13,14
+data GameState = GameState GameState13,14
+data GameState = GameState { locations locations13,14
+                             move move14,15
+type InputEvent InputEvent16,17
+offset offset18,19
+offset offset19,20
+kewai kewai21,22
+kewai kewai22,23
+putahi putahi31,32
+putahi putahi32,33
+pieceSize pieceSize34,35
+pieceSize pieceSize35,36
+initialGameState initialGameState37,38
+initialGameState initialGameState38,39
+clickedLocation clickedLocation42,43
+clickedLocation clickedLocation43,44
+findLocation findLocation46,47
+findLocation findLocation47,48
+getVal getVal50,51
+getVal getVal51,52
+movableLocation movableLocation53,54
+movableLocation movableLocation54,55
+setLocation setLocation65,66
+setLocation setLocation66,67
+nextMove nextMove71,72
+nextMove nextMove72,73
+gameOver gameOver75,76
+gameOver gameOver76,77
+renderPiece renderPiece79,80
+renderPiece renderPiece80,81
+renderLocation renderLocation83,84
+renderLocation renderLocation84,85
+renderStatusBar renderStatusBar88,89
+renderStatusBar renderStatusBar89,90
+renderBoard renderBoard94,95
+renderBoard renderBoard95,96
+movePiece movePiece100,101
+movePiece movePiece101,102
+network network108,109
+network network111,112
+main main116,117
+main main117,118

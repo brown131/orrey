@@ -1,0 +1,28 @@
+Name:                orrey
+Version:             1.0.0
+License:             MIT
+License-file:        LICENSE
+Author:              Scott Brown
+Maintainer:          brown131@yahoo.com
+Build-Type:          Simple
+Cabal-Version:       >= 1.6
+Stability:           experimental
+Category:            Graphics
+Description:
+       Orrey simulator
+
+Executable orrey
+  Main-is:        Main.hs
+  hs-source-dirs: src
+  Build-depends:
+                base             >= 4.8
+              , gloss            >= 1.12.0.0
+              , gloss-rendering  >= 1.12.0.0
+              , elerea           >= 2.9.0
+              , astro            >= 0.4.2.1
+              , time             >= 1.10
+  ghc-options:
+        -O2
+        -Wall
+        -threaded
+        -rtsopts
