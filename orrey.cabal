@@ -15,10 +15,10 @@ Executable orrey
   Main-is:        Main.hs
   hs-source-dirs: src
   Build-depends:
-                base             >= 4.8
-              , gloss            >= 1.13
-              , gloss-rendering  >= 1.13
-              , elerea           >= 2.9
+                base             >= 4.8 && < 4.12
+              , gloss            == 1.13.*
+              , gloss-rendering  == 1.13.*
+              , elerea           >= 2.9.0
               , astro            >= 0.4
               , time             >= 1.10
   ghc-options:
@@ -26,3 +26,5 @@ Executable orrey
         -Wall
         -threaded
         -rtsopts
+
+        

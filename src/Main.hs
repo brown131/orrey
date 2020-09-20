@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Astro.Planet
-import Data.Astro.Planet.PlanetDetails
+import Data.Astro.Planet.PlanetDetails()
 import Data.Astro.Time.JulianDate()
 import Data.Astro.Types
 import Data.Fixed
@@ -12,6 +12,8 @@ import FRP.Elerea.Simple
 import Graphics.Gloss
 import Control.Monad.IO.Class()
 import qualified Graphics.Gloss.Interface.IO.Game as G
+  
+type InputEvent = G.Event
 
 data CelestialObject = Sun | Moon deriving (Eq, Show)
 
@@ -47,25 +49,23 @@ initialState = do now <- getCurrentTime
                     osJD = 0,
                     osPlanets = map (\p -> planetInfo p) planets
                     }
-  
-type InputEvent = G.Event
 
--- TODO: This is not accounting for the anomoly at the epoch.
 trueAnomaly :: Planet -> Double -> Double
 trueAnomaly p jd = mod' (jd * rad / tp) rad
                    where rad = 2 * pi
                          tpe = 365.24255 * (pdTp $ j2010PlanetDetails Earth)
                          tp = (pdTp $ j2010PlanetDetails p) * tpe
-
--- TODO: This is not accounting for ecliptic lat/long.
+                        
 planetCoordinates :: Planet -> Double -> (Float, Float)
 planetCoordinates p v = (realToFrac x, realToFrac y)
                         where a = auToKM $ pdAlpha $ j2010PlanetDetails p
                               au = auToKM $ pdAlpha $ j2010PlanetDetails Earth
                               e = pdE $ j2010PlanetDetails p
-                              r = (a / au) * (1 - e^2) / (1 + e * cos v)
-                              x = r * cos v
-                              y = r * sin v
+                              ω_ = toRadians $ pdOmegaBar $ j2010PlanetDetails p
+                              lp = v + ω_
+                              r = (a / au) * (1 - e^2) / (1 + e * cos lp)
+                              x = r * cos lp
+                              y = r * sin lp
                                                  
 movePlanets :: Maybe InputEvent -> OrreyState -> OrreyState
 movePlanets (Just (G.EventKey (G.MouseButton G.LeftButton) G.Down _ _)) st = st
@@ -79,18 +79,15 @@ renderStatusBar st = [Translate (-450) (-390) $ Color white $
                       " v=" ++ (show $ trueAnomaly Earth jd)]
                      where jd = osJD st
                            (x, y) = planetCoordinates Earth $ trueAnomaly Earth jd
-                           au = realToFrac $ auToKM $ pdAlpha $ j2010PlanetDetails Earth
 
 renderSun :: [Picture]
 renderSun = [Translate 0 0 $ Color yellow $ ThickCircle 1 8]
 
 renderPlanet :: Planet -> Double -> Picture
-renderPlanet p jd = Translate x' y' $ Color color $ ThickCircle 1 size
+renderPlanet p jd = Translate (x * scl) (y * scl) $ Color clr $ ThickCircle 1 size
                     where (x, y) = planetCoordinates p (trueAnomaly p jd)
-                          scale = 70
-                          x' = x * scale
-                          y' = y * scale
-                          color = piColor $ planetInfo p
+                          scl = 70
+                          clr = piColor $ planetInfo p
                           size = piSize $ planetInfo p
        
 renderOrbit :: Planet -> Picture
@@ -133,4 +130,3 @@ main = do
     (\t _ -> do
         tickSink $ Just t
         recomputePicture)
-    
