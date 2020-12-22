@@ -96,8 +96,8 @@ renderOrbit p = Translate 0 0 $ Color white $ Circle (aus * 70)
 
 renderOrrey :: OrreyState -> Picture 
 renderOrrey st = Pictures $ renderSun ++
-                 -- map (\p -> renderOrbit p) planets ++
-                 map (\p -> renderPlanet p (osJD st)) planets ++
+                 -- ((\p -> renderOrbit p) <$> planets) ++
+                 ((\p -> renderPlanet p (osJD st)) <$> planets) ++
                  renderStatusBar st
 
 network :: SignalGen (Signal (Maybe Float))
