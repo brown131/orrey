@@ -23,9 +23,4 @@ cabal.project.local
 .#*
 #*
 *#
-.idea/ClojureProjectResolveSettings.xml
-/.idea/compiler.xml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/mutorere.iml
-/.idea/vcs.xml
+brown131_orrey.tgz
