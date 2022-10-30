@@ -20,8 +20,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true"\
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
-
-# [Optional] Uncomment this section to install additional OS packages.
+# Install files for Gloss
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends libglu1-mesa-dev freeglut3-dev mesa-common-dev mesa-utils libgl1-mesa-glx
 
+RUN ln -s /workspaces/orrey/.cabal /home/vscode/.cabal

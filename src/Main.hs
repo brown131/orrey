@@ -73,10 +73,10 @@ movePlanets _ st = st { osJD = (+1) $ osJD st }
 
 renderStatusBar :: OrreyState -> [Picture]
 renderStatusBar st = [Translate (-450) (-390) $ Color white $
-                       Polygon [(0, 0), (0, 30), (900, 30), (900, 0)]] ++
-                     [Translate (-440) (-380) $ Scale 0.1 0.1 $ Text $
+                       Polygon [(0, 0), (0, 30), (900, 30), (900, 0)]] 
+                     {- ++ [Translate (-440) (-380) $ Scale 0.1 0.1 $ Text $
                       ("Earth: " ++ (show x)) ++ "," ++ (show y) ++
-                      " v=" ++ (show $ trueAnomaly Earth jd)]
+                      " v=" ++ (show $ trueAnomaly Earth jd)] -}
                      where jd = osJD st
                            (x, y) = planetCoordinates Earth $ trueAnomaly Earth jd
 

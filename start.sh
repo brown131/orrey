@@ -8,5 +8,5 @@ IMAGE=brown131/orrey
 IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
 
 xhost + $IP
-docker run -ti --name orrey --rm -e DISPLAY=$IP:0 -u vscode $IMAGE
+docker run --name orrey --rm -e DISPLAY=$IP:0 -u vscode $IMAGE
 
