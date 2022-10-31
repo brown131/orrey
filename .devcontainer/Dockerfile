@@ -24,9 +24,11 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends libglu1-mesa-dev freeglut3-dev mesa-common-dev mesa-utils libgl1-mesa-glx
 
 # Install needed packages and setup non-root user
+ARG INSTALL_ZSH=true
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+ARG UPGRADE_PACKAGE=false
 COPY library-scripts/*.sh /tmp/library-scripts/
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true"\
@@ -41,9 +43,13 @@ RUN curl https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup > /usr/bin/ghcu
 
 # install GHC and Cabal
 ARG GHC=8.10.7
-ARG CABAL=latest
+ARG CABAL=3.8.1.0
+USER vscode
 RUN ghcup install ghc ${GHC} \
-    && ghcup install cabal latest
+    && ghcup set ghc ${GHC} \
+    && ghcup install cabal ${CABAL} \
+    && ghcup set cabal ${CABAL}
+ENV PATH="${PATH}:/home/vscode/.ghcup/bin"
 
 # Link cabal user directory to be local to the workspace
 ARG WORKSPACE=orrey
