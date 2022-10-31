@@ -1,17 +1,29 @@
-# Use the [Choice] comment to indicate option arguments that should appear in VS Code UX
-#
-# [Choice] Haskell version: 9, 8
-ARG VARIANT=8
-FROM haskell:${VARIANT}
+FROM debian:buster
 
-# Use the [Option] comment to specify true/false arguments that should appear in VS Code UX
-#
-# [Option] Install zsh
-ARG INSTALL_ZSH="true"
-# [Option] Upgrade OS packages to their latest versions
-ARG UPGRADE_PACKAGES="false"
+# Install base packages
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        libnuma-dev \
+        zlib1g-dev \
+        libgmp-dev \
+        libgmp10 \
+        git \
+        wget \
+        lsb-release \
+        software-properties-common \
+        gnupg2 \
+        apt-transport-https \
+        gcc \
+        autoconf \
+        automake \
+        build-essential
 
-# Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies
+# Install packages for Gloss graphics library
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends libglu1-mesa-dev freeglut3-dev mesa-common-dev mesa-utils libgl1-mesa-glx
+
+# Install needed packages and setup non-root user
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -20,8 +32,19 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true"\
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
-# Install files for Gloss
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends libglu1-mesa-dev freeglut3-dev mesa-common-dev mesa-utils libgl1-mesa-glx
+# Install GHCup
+ARG GPG_KEY=7784930957807690A66EBDBE3786C5262ECB4A3F
+RUN gpg --batch --keyserver keys.openpgp.org --recv-keys $GPG_KEY
+RUN curl https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup > /usr/bin/ghcup \
+    && chmod +x /usr/bin/ghcup \
+    && ghcup config set gpg-setting GPGStrict
 
-RUN ln -s /workspaces/orrey/.cabal /home/vscode/.cabal
+# install GHC and Cabal
+ARG GHC=8.10.7
+ARG CABAL=latest
+RUN ghcup install ghc ${GHC} \
+    && ghcup install cabal latest
+
+# Link cabal user directory to be local to the workspace
+ARG WORKSPACE=orrey
+RUN ln -s /workspaces/${WORKSPACE}/.cabal /home/vscode/.cabal
